@@ -6,6 +6,7 @@ Personal Claude Code configuration backup — plugins, settings, and agent skill
 
 | File | Purpose |
 |------|---------|
+| `CLAUDE.md` | Workspace instructions for Claude Code — projects, commands, architecture |
 | `claude/settings.json` | Claude Code settings: env vars, permissions, plugins, theme |
 | `agents/.skill-lock.json` | Installed agent skills registry |
 | `agents/skills/find-skills/SKILL.md` | find-skills agent skill |
