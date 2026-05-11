@@ -1,0 +1,5 @@
+# Nested git repos — managed independently
+src/
+
+# Profile assets (binary files, not tracked here)
+Profile/
