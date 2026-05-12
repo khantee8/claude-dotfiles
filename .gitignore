@@ -3,3 +3,11 @@ src/
 
 # Profile assets (binary files, not tracked here)
 Profile/
+
+# Playwright MCP session artifacts
+.playwright-mcp/
+
+# Screenshot files (testing/debugging artifacts)
+*.png
+*.jpg
+*.jpeg
