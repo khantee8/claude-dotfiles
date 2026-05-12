@@ -45,14 +45,83 @@ Each project in `/project/src/` has its own `docker-compose.yml` co-located insi
 - **frontend-design**: Production-grade UI with distinctive aesthetics (auto-activates on frontend tasks)
 - **code-review**: Multi-agent PR review with confidence scoring
 - **commit-commands**: Git commit, push, and PR workflows (/commit, /push, /pr)
-- **security-guidance**: Security warnings when editing sensitive files
+- **github**: GitHub MCP — issues, PRs, repos
+- **playwright**: Browser automation and UI testing
 - **context7**: Live, version-specific library docs lookup (reduces API hallucinations)
 - **webapp-testing**: Playwright-based browser testing for UI verification and debugging
+- **telegram**: Telegram bot integration
 - **superpowers**: Development workflow framework — brainstorm → plan → implement with TDD
   - /superpowers:brainstorm — Refine ideas before coding
   - /superpowers:write-plan — Create implementation plans
   - /superpowers:execute-plan — Execute plans in batches via subagents
   - Auto-activating skills: test-driven-development, systematic-debugging, verification-before-completion
+- **claude-code-setup**: Claude Code configuration helpers
+- **auth0**: Auth0 integration patterns
+- **cloudflare**: Cloudflare Workers, Pages, and bindings
+- **vercel**: Vercel deployment, env vars, and AI SDK
+- **skill-creator**: Create and improve Claude Code skills
+
+---
+
+## Dotfiles Repo Structure
+
+This repo (`khantee8/claude-dotfiles`) is the source of truth for this machine's Claude Code config.
+
+```
+.claude/
+  settings.json     ← single source for all Claude settings (plugins, env, permissions, theme)
+  settings.local.json  ← machine-local overrides, NOT committed
+  skills -> ../.agents/skills  ← symlink to custom skills directory
+
+.agents/skills/     ← custom agent skills (tracked in skills-lock.json)
+  brainstorming/
+  cybersecurity-analyst/
+  finance-expert/
+  owasp-security-check/
+  security-review/
+  stock-analysis/
+
+agents/skills/      ← find-skills only (tracked in agents/.skill-lock.json)
+  find-skills/
+
+skills-lock.json    ← registry for .agents/skills installs
+setup.sh            ← restore script for new machines
+```
+
+**Key constraint**: `.claude/skills` is a symlink to `../.agents/skills`. Do not change this to point to `agents/skills` — it only contains `find-skills`.
+
+## Updating the Dotfiles
+
+After changing Claude Code settings on this machine:
+
+```bash
+# Settings are already at .claude/settings.json — just commit
+cd /project
+git add .claude/settings.json
+git commit -m "update settings"
+git push origin main
+```
+
+After installing a new agent skill:
+
+```bash
+cp ~/.agents/.skill-lock.json /project/agents/.skill-lock.json  # not used currently
+# skills-lock.json is managed by npx skills — commit it after install
+git add skills-lock.json .agents/skills/
+git commit -m "add <skill-name> skill"
+git push origin main
+```
+
+## Restoring on a New Machine
+
+```bash
+git clone https://github.com/khantee8/claude-dotfiles.git
+cd claude-dotfiles
+chmod +x setup.sh
+./setup.sh
+```
+
+`setup.sh` copies `.claude/settings.json` to `~/.claude/settings.json` and reinstalls plugins via the `claude` CLI. Requires Claude Code and Node.js to be installed first.
 
 ---
 

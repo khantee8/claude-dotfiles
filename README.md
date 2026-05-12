@@ -4,22 +4,20 @@ Personal Claude Code configuration backup — plugins, settings, and agent skill
 
 ## What's included
 
-| File | Purpose |
-|------|---------|
+| File/Dir | Purpose |
+|---|---|
 | `CLAUDE.md` | Workspace instructions for Claude Code — projects, commands, architecture |
-| `claude/settings.json` | Claude Code settings: env vars, permissions, plugins, theme |
-| `agents/.skill-lock.json` | Installed agent skills registry |
-| `agents/skills/find-skills/SKILL.md` | find-skills agent skill |
+| `.claude/settings.json` | All Claude Code settings: env vars, permissions, plugins, theme |
+| `.agents/skills/` | Custom agent skills (brainstorming, cybersecurity, finance, owasp, security-review, stock-analysis) |
+| `agents/skills/find-skills/` | find-skills agent skill |
+| `skills-lock.json` | Registry for `.agents/skills` installs |
+| `setup.sh` | Restore script for new machines |
 
-## Plugins (re-installed by setup.sh)
+## Plugins
 
-- `frontend-design` — Production-grade UI generation
-- `code-review` — Multi-agent PR review
-- `commit-commands` — Git commit/push/PR workflows
-- `security-guidance` — Security warnings for sensitive files
-- `context7` — Live library docs lookup
-- `webapp-testing` — Playwright browser testing
-- `superpowers` — Brainstorm → plan → implement framework
+Managed via `enabledPlugins` in `.claude/settings.json`:
+
+`frontend-design` · `code-review` · `commit-commands` · `github` · `playwright` · `telegram` · `superpowers` · `claude-code-setup` · `auth0` · `cloudflare` · `vercel` · `skill-creator`
 
 ## Restore on a new machine
 
@@ -36,12 +34,11 @@ chmod +x setup.sh
 ./setup.sh
 ```
 
-## Update this backup
-
-Run from this repo directory after changing your Claude Code settings:
+## Update after changing settings
 
 ```bash
-cp ~/.claude/settings.json claude/settings.json
-cp ~/.agents/.skill-lock.json agents/.skill-lock.json
-git add -A && git commit -m "update config" && git push
+cd /project
+git add .claude/settings.json skills-lock.json
+git commit -m "update config"
+git push origin main
 ```

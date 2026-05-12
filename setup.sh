@@ -13,7 +13,7 @@ if [ -f "$CLAUDE_DIR/settings.json" ]; then
   cp "$CLAUDE_DIR/settings.json" "$CLAUDE_DIR/settings.json.bak"
   echo "  Backed up existing settings.json → settings.json.bak"
 fi
-cp "$REPO_DIR/claude/settings.json" "$CLAUDE_DIR/settings.json"
+cp "$REPO_DIR/.claude/settings.json" "$CLAUDE_DIR/settings.json"
 echo "  ✓ Claude settings installed"
 
 # ── Agent skills ─────────────────────────────────────────────────────────────
