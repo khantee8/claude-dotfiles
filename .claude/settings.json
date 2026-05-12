@@ -10,6 +10,7 @@
     "claude-code-setup@claude-plugins-official": true,
     "auth0@claude-plugins-official": true,
     "cloudflare@claude-plugins-official": true,
-    "vercel@claude-plugins-official": true
+    "vercel@claude-plugins-official": true,
+    "skill-creator@claude-plugins-official": true
   }
 }
