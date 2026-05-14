@@ -22,6 +22,14 @@ cp "$REPO_DIR/agents/.skill-lock.json" "$AGENTS_DIR/.skill-lock.json"
 cp "$REPO_DIR/agents/skills/find-skills/SKILL.md" "$AGENTS_DIR/skills/find-skills/SKILL.md"
 echo "  ✓ Agent skills installed"
 
+# ── Custom Claude skills → ~/.claude/skills ──────────────────────────────────
+mkdir -p "$CLAUDE_DIR/skills"
+for skill_dir in "$REPO_DIR/.agents/skills"/*/; do
+  skill_name="$(basename "$skill_dir")"
+  cp -r "$skill_dir" "$CLAUDE_DIR/skills/$skill_name"
+  echo "  ✓ Claude skill installed: $skill_name"
+done
+
 # ── Re-install Claude plugins ─────────────────────────────────────────────────
 if command -v claude &>/dev/null; then
   echo ""
