@@ -322,11 +322,31 @@ Expected: server starts on http://localhost:3000, page shows "NaNote Corp — bo
 
 Kill with Ctrl+C after verifying.
 
-- [ ] **Step 12: Init git and commit**
+- [ ] **Step 12: Init local git and commit**
 
 ```bash
 cd /project/src/company.nanoteofficial.me && git init && git add -A
 git commit -m "feat: bootstrap Next.js 16 project for company.nanoteofficial.me v0.1"
+```
+
+- [ ] **Step 13: Create GitHub repo + push initial commit**
+
+Follows the same pattern as the other NaNote projects (`khantee8/finance.nanoteofficial.me`, `khantee8/nanoteofficial.me`).
+
+```bash
+cd /project/src/company.nanoteofficial.me
+gh repo create khantee8/company.nanoteofficial.me \
+  --public \
+  --description "AI Company Simulator — isometric pixel-art office with 5 Claude-powered agents" \
+  --source=. \
+  --remote=origin \
+  --push
+```
+Expected: GitHub repo created at https://github.com/khantee8/company.nanoteofficial.me with the initial commit pushed.
+
+Verify with:
+```bash
+gh repo view khantee8/company.nanoteofficial.me --json url,name,isPrivate
 ```
 
 ---
@@ -2416,6 +2436,16 @@ In browser at http://localhost:3000 verify ALL of:
 - [ ] Sidebar dept click → camera pans + zone highlight pulses
 - [ ] Reset View button works
 - [ ] No console errors
+
+- [ ] **Step 2b: Push all commits to GitHub**
+
+```bash
+cd /project/src/company.nanoteofficial.me && git push origin main
+```
+Verify all task commits are on the remote:
+```bash
+gh repo view khantee8/company.nanoteofficial.me --json url
+```
 
 - [ ] **Step 3: Invoke the base-deployment skill**
 
