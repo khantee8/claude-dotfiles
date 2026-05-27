@@ -198,7 +198,7 @@ Frontend status dots:
 | Styling | Tailwind v4 | Consistent with portfolio site |
 | Real-time | Server-Sent Events (SSE) | Simpler than WebSocket for one-way stream |
 | AI | `@anthropic-ai/sdk` (claude-sonnet-4-6) | Latest Claude, prompt caching for repeated tasks |
-| Deployment | Vercel Hobby → Vercel Pro (for cron jobs) | Consistent with existing projects |
+| Deployment | Vercel Hobby (current plan); upgrade to Pro if >1 cron/day needed | Consistent with existing projects |
 | Database | Vercel KV (Redis) | Store agent run history + last output |
 | Scheduling | Vercel Cron | Run agents on schedule |
 
@@ -246,7 +246,7 @@ lib/
 
 - Admin routes (`/api/agents/[id]/run`) protected by `ADMIN_SECRET` env var
 - Claude API key stored in Vercel env, never exposed to client
-- SSE endpoint rate-limited (max 1 connection per IP)
+- SSE endpoint rate-limited (max 3 connections per IP to allow dev/preview testing)
 - No user input in pipeline feed (all content is agent-generated)
 - Agent outputs sanitised before storing in KV
 
