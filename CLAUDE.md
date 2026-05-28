@@ -183,3 +183,26 @@ No tests. No TypeScript.
 - `POST /api/upload` — multipart file upload (XLSX or CSV)
 - `POST /api/load-url` — load from Google Sheets/Drive URL
 - `GET /api/template` — download a sample XLSX template
+
+---
+
+### company.nanoteofficial.me — AI Company Simulator
+
+**Stack**: Next.js 16 (App Router), React 19, TypeScript, Tailwind v4, HTML5 Canvas
+**Live**: https://company.nanoteofficial.me (Vercel Hobby, auto-deploys from `main`)
+
+```bash
+cd /project/src/company.nanoteofficial.me
+npm run dev        # http://localhost:3000
+npm run build
+npm run lint
+npm test           # vitest unit tests
+npx tsc --noEmit
+```
+
+Pixel-art isometric office showing 5 AI department agents (CEO, Marketing, R&D, Operations, Finance) walking around with simulated activity. v0.1 = visual MVP with simulated logs; v0.2 = real Claude API integration (SSE, KV, Cron).
+
+**Architecture**: Vanilla HTML5 Canvas isometric engine (no game library) under `src/lib/iso/` (engine, camera, room, furniture, lights, zoneHighlight) + agent state machine under `src/lib/agents/` (Agent class, behaviour scripts, React-rendered SVG sprites). React components in `src/components/` (OfficeCanvas mounts the rAF render loop; DepartmentSidebar/TerminalFeed/TopBar/OfficeApp compose the UI). No `dangerouslySetInnerHTML` — sprites and logs render from typed data.
+
+Spec: `/project/docs/superpowers/specs/2026-05-27-company-nanoteofficial-design.md`
+Plan: `/project/docs/superpowers/plans/2026-05-27-company-nanoteofficial-v0.1.md`
