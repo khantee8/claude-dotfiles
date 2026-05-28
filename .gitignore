@@ -7,6 +7,9 @@ Profile/
 # Playwright MCP session artifacts
 .playwright-mcp/
 
+# Superpowers brainstorm sessions (mockup HTML previews)
+.superpowers/
+
 # Screenshot files (testing/debugging artifacts)
 *.png
 *.jpg
