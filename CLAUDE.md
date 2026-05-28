@@ -200,9 +200,13 @@ npm test           # vitest unit tests
 npx tsc --noEmit
 ```
 
-Pixel-art isometric office showing 5 AI department agents (CEO, Marketing, R&D, Operations, Finance) walking around with simulated activity. v0.1 = visual MVP with simulated logs; v0.2 = real Claude API integration (SSE, KV, Cron).
+Pixel-art isometric office with 5 AI department agents (CEO, Marketing, R&D, Operations, Finance). v0.1 = visual MVP with simulated logs. **v0.2 (current)** = real Claude agents producing daily artifacts via Vercel Cron, Upstash Redis for state, two-way Telegram bot (/status, /run, /ask), CI/CD deploy alerts, and an artifact viewer panel.
 
-**Architecture**: Vanilla HTML5 Canvas isometric engine (no game library) under `src/lib/iso/` (engine, camera, room, furniture, lights, zoneHighlight) + agent state machine under `src/lib/agents/` (Agent class, behaviour scripts, React-rendered SVG sprites). React components in `src/components/` (OfficeCanvas mounts the rAF render loop; DepartmentSidebar/TerminalFeed/TopBar/OfficeApp compose the UI). No `dangerouslySetInnerHTML` — sprites and logs render from typed data.
+**Architecture**: Vanilla HTML5 Canvas isometric engine (no game library) under `src/lib/iso/` + agent state machine under `src/lib/agents/` (Agent class, behaviour scripts, SVG sprites). React components in `src/components/` (OfficeCanvas, DepartmentSidebar, TerminalFeed, TopBar, OfficeApp, ArtifactPanel, Markdown). No `dangerouslySetInnerHTML`. Backend: `src/lib/claude.ts` (Anthropic SDK wrapper), `src/lib/redis.ts` (Upstash repo), `src/lib/telegram.ts` (bot API), `src/lib/sources/` (CoinGecko, Vercel API, GitHub API), `src/lib/agents/` (personas, runner, 5 agent modules, registry). API routes: `/api/cron/run` (CRON_SECRET-protected), `/api/agents`, `/api/feed`, `/api/telegram` (webhook), `/api/webhooks/vercel` (deploy alerts). Cron: 5 daily jobs staggered UTC 11-15 in `vercel.json`.
 
-Spec: `/project/docs/superpowers/specs/2026-05-27-company-nanoteofficial-design.md`
-Plan: `/project/docs/superpowers/plans/2026-05-27-company-nanoteofficial-v0.1.md`
+**Env vars** (Vercel project settings): `ANTHROPIC_API_KEY`, `UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKEN`, `TELEGRAM_BOT_TOKEN`, `TELEGRAM_WEBHOOK_SECRET`, `TELEGRAM_ALLOWED_CHAT_ID`, `VERCEL_TOKEN`, `GITHUB_TOKEN`, `CRON_SECRET`, `VERCEL_WEBHOOK_SECRET` (optional).
+
+Spec v0.1: `/project/docs/superpowers/specs/2026-05-27-company-nanoteofficial-design.md`
+Plan v0.1: `/project/docs/superpowers/plans/2026-05-27-company-nanoteofficial-v0.1.md`
+Spec v0.2: `/project/docs/superpowers/specs/2026-05-28-company-nanoteofficial-v0.2-design.md`
+Plan v0.2: `/project/docs/superpowers/plans/2026-05-28-company-nanoteofficial-v0.2.md`
