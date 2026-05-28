@@ -40,6 +40,7 @@ Each project in `/project/src/` has its own `docker-compose.yml` co-located insi
 - Use git for version control on all projects in /project/src/
 - When installing Python packages, use: pip install --break-system-packages <package>
 - Extended thinking is always on — use it for complex architectural decisions
+- All Next.js projects use **Next.js 16** — APIs differ from training data. Use `context7` MCP tool or read `node_modules/next/dist/docs/` before writing Next.js-specific code.
 
 ## Installed Plugins
 - **frontend-design**: Production-grade UI with distinctive aesthetics (auto-activates on frontend tasks)
@@ -69,23 +70,28 @@ This repo (`khantee8/claude-dotfiles`) is the source of truth for this machine's
 
 ```
 .claude/
-  settings.json     ← single source for all Claude settings (plugins, env, permissions, theme)
+  settings.json        ← all Claude settings (plugins, env, permissions, theme)
   settings.local.json  ← machine-local overrides, NOT committed
   skills -> ../.agents/skills  ← symlink to custom skills directory
 
-.agents/skills/     ← custom agent skills (tracked in skills-lock.json)
-  brainstorming/
+.agents/skills/        ← custom agent skills (tracked in skills-lock.json)
+  base-deployment/     ← NaNote Finance deploy workflow
+  brainstorming/       ← idea refinement with visual companion
   cybersecurity-analyst/
   finance-expert/
   owasp-security-check/
   security-review/
   stock-analysis/
 
-agents/skills/      ← find-skills only (tracked in agents/.skill-lock.json)
+agents/skills/         ← find-skills only (tracked in agents/.skill-lock.json)
   find-skills/
 
-skills-lock.json    ← registry for .agents/skills installs
-setup.sh            ← restore script for new machines
+docs/superpowers/      ← design specs and implementation plans
+  specs/               ← feature design documents
+  plans/               ← step-by-step implementation plans
+
+skills-lock.json       ← registry for .agents/skills installs
+setup.sh               ← restore script for new machines
 ```
 
 **Key constraint**: `.claude/skills` is a symlink to `../.agents/skills`. Do not change this to point to `agents/skills` — it only contains `find-skills`.
@@ -95,7 +101,6 @@ setup.sh            ← restore script for new machines
 After changing Claude Code settings on this machine:
 
 ```bash
-# Settings are already at .claude/settings.json — just commit
 cd /project
 git add .claude/settings.json
 git commit -m "update settings"
@@ -105,8 +110,6 @@ git push origin main
 After installing a new agent skill:
 
 ```bash
-cp ~/.agents/.skill-lock.json /project/agents/.skill-lock.json  # not used currently
-# skills-lock.json is managed by npx skills — commit it after install
 git add skills-lock.json .agents/skills/
 git commit -m "add <skill-name> skill"
 git push origin main
@@ -121,7 +124,7 @@ chmod +x setup.sh
 ./setup.sh
 ```
 
-`setup.sh` copies `.claude/settings.json` to `~/.claude/settings.json` and reinstalls plugins via the `claude` CLI. Requires Claude Code and Node.js to be installed first.
+`setup.sh` copies `.claude/settings.json` to `~/.claude/settings.json`, installs custom skills to `~/.claude/skills/`, and reinstalls plugins via the `claude` CLI. Requires Claude Code and Node.js.
 
 ---
 
@@ -137,25 +140,65 @@ These are the source files for the portfolio site's avatar and CV download links
 
 ## Projects in /project/src/
 
+All projects deploy to Vercel Hobby (auto-deploy from `main`). Each has its own git repo under `khantee8/`. Each `*.nanoteofficial.me` project has a subdomain CNAME in Namecheap pointing to Vercel.
+
 ### nanoteofficial.me — Portfolio Site
 
 **Stack**: Next.js 16 (App Router), React 19, TypeScript, Tailwind v4
-**Live**: https://nanoteofficial.me (Vercel Hobby, auto-deploys from `main`)
+**Live**: https://nanoteofficial.me
 
 ```bash
 cd /project/src/nanoteofficial.me
 npm run dev        # http://localhost:3000
 npm run build
 npm run lint
-npx tsc --noEmit   # type check only
-
-# Docker (requires npm run build first — container runs next start, not next dev)
-docker compose up -d   # http://localhost:3000
+npx tsc --noEmit
 ```
 
-See `src/nanoteofficial.me/CLAUDE.md` for full architecture notes (subdomain routing, i18n, theming, component conventions). That file is the authoritative guide for working in that repo.
+Multi-subdomain portfolio site — `proxy.ts` rewrites `<sub>.nanoteofficial.me` → `/<sub>` (finance, cyber, kb, art are preview shells). v1.3 adds a "Company" section between About and Experience with a live iframe of `company.nanoteofficial.me`. See `src/nanoteofficial.me/CLAUDE.md` for full architecture (subdomain routing, i18n, theming, component conventions).
 
-**Key constraint**: This is Next.js 16 — APIs differ from training data. Use the `context7` MCP tool or read `node_modules/next/dist/docs/` before writing Next.js-specific code.
+---
+
+### finance.nanoteofficial.me — AI Finance Advisor
+
+**Stack**: Next.js 16 (App Router), React 19, TypeScript, Tailwind v4, Auth0 v4
+**Live**: https://finance.nanoteofficial.me
+
+```bash
+cd /project/src/finance.nanoteofficial.me
+npm run dev        # http://localhost:3001
+npm run build
+npx tsc --noEmit   # verification step — no test runner configured
+```
+
+Auth0-gated SPA with role-based views (advisor, client, admin). `proxy.ts` enforces auth. Role is read from the ID token directly (`@auth0/nextjs-auth0` v4 strips custom namespace claims from `session.user`). `AppShell` → `Shell` is the single stateful container; screens receive props and manage local state only. See `src/finance.nanoteofficial.me/CLAUDE.md` for full architecture (auth gate, SPA pattern, view routing).
+
+---
+
+### company.nanoteofficial.me — AI Company Simulator
+
+**Stack**: Next.js 16 (App Router), React 19, TypeScript, Tailwind v4, HTML5 Canvas, Vitest
+**Live**: https://company.nanoteofficial.me
+
+```bash
+cd /project/src/company.nanoteofficial.me
+npm run dev        # http://localhost:3000
+npm run build
+npm run lint
+npm test           # vitest — 35 tests across 8 files
+npx tsc --noEmit
+```
+
+Pixel-art isometric office with 5 AI department agents (CEO, Marketing, R&D, Operations, Finance). v0.2 (current) = real Claude agents producing daily artifacts via Vercel Cron, Upstash Redis for state, two-way Telegram bot, and deploy alerts.
+
+**Architecture layers**:
+- **Isometric engine** (`src/lib/iso/`) — vanilla HTML5 Canvas renderer, no game library
+- **Agent system** (`src/lib/agents/`) — Agent class with state machine, persona definitions, department modules (ceo/marketing/rnd/operations/finance), runner orchestrator
+- **Integrations** (`src/lib/`) — `claude.ts` (Anthropic SDK), `redis.ts` (Upstash), `telegram.ts` (bot API), `sources/` (CoinGecko, Vercel API, GitHub API)
+- **API routes** — `/api/cron/run` (CRON_SECRET-protected, 5 daily jobs staggered UTC 11–15 in `vercel.json`), `/api/agents`, `/api/feed`, `/api/telegram` (webhook), `/api/webhooks/vercel` (deploy alerts)
+- **Components** — OfficeCanvas, DepartmentSidebar, TerminalFeed, TopBar, OfficeApp, ArtifactPanel, Markdown (safe renderer, no `dangerouslySetInnerHTML`)
+
+See `src/company.nanoteofficial.me/CLAUDE.md` for full architecture and env var list.
 
 ---
 
@@ -168,45 +211,8 @@ cd /project/src/personal-investment-project
 npm run dev    # node --watch server.js — http://localhost:3000
 npm start      # production
 
-# Docker (auto-installs deps and runs server.js)
+# Docker
 docker compose up -d   # http://localhost:3030 → container :3000
 ```
 
-No tests. No TypeScript.
-
-**Architecture**: Single-file server (`server.js`) + static frontend (`public/`). All parsing logic lives in `server.js`:
-
-- `detectAndParse()` auto-detects file format by checking if the first cell is `"Personal Statement"`, then dispatches to either `parsePersonalStatement()` (income/investment/expense statement from XLSX) or `parsePortfolioData()` (tabular holdings with symbol/shares/cost/price columns).
-- `fetchFromUrl()` handles Google Sheets and Google Drive URLs, converting share links to direct download URLs.
-
-**API routes**:
-- `POST /api/upload` — multipart file upload (XLSX or CSV)
-- `POST /api/load-url` — load from Google Sheets/Drive URL
-- `GET /api/template` — download a sample XLSX template
-
----
-
-### company.nanoteofficial.me — AI Company Simulator
-
-**Stack**: Next.js 16 (App Router), React 19, TypeScript, Tailwind v4, HTML5 Canvas
-**Live**: https://company.nanoteofficial.me (Vercel Hobby, auto-deploys from `main`)
-
-```bash
-cd /project/src/company.nanoteofficial.me
-npm run dev        # http://localhost:3000
-npm run build
-npm run lint
-npm test           # vitest unit tests
-npx tsc --noEmit
-```
-
-Pixel-art isometric office with 5 AI department agents (CEO, Marketing, R&D, Operations, Finance). v0.1 = visual MVP with simulated logs. **v0.2 (current)** = real Claude agents producing daily artifacts via Vercel Cron, Upstash Redis for state, two-way Telegram bot (/status, /run, /ask), CI/CD deploy alerts, and an artifact viewer panel.
-
-**Architecture**: Vanilla HTML5 Canvas isometric engine (no game library) under `src/lib/iso/` + agent state machine under `src/lib/agents/` (Agent class, behaviour scripts, SVG sprites). React components in `src/components/` (OfficeCanvas, DepartmentSidebar, TerminalFeed, TopBar, OfficeApp, ArtifactPanel, Markdown). No `dangerouslySetInnerHTML`. Backend: `src/lib/claude.ts` (Anthropic SDK wrapper), `src/lib/redis.ts` (Upstash repo), `src/lib/telegram.ts` (bot API), `src/lib/sources/` (CoinGecko, Vercel API, GitHub API), `src/lib/agents/` (personas, runner, 5 agent modules, registry). API routes: `/api/cron/run` (CRON_SECRET-protected), `/api/agents`, `/api/feed`, `/api/telegram` (webhook), `/api/webhooks/vercel` (deploy alerts). Cron: 5 daily jobs staggered UTC 11-15 in `vercel.json`.
-
-**Env vars** (Vercel project settings): `ANTHROPIC_API_KEY`, `UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKEN`, `TELEGRAM_BOT_TOKEN`, `TELEGRAM_WEBHOOK_SECRET`, `TELEGRAM_ALLOWED_CHAT_ID`, `VERCEL_TOKEN`, `GITHUB_TOKEN`, `CRON_SECRET`, `VERCEL_WEBHOOK_SECRET` (optional).
-
-Spec v0.1: `/project/docs/superpowers/specs/2026-05-27-company-nanoteofficial-design.md`
-Plan v0.1: `/project/docs/superpowers/plans/2026-05-27-company-nanoteofficial-v0.1.md`
-Spec v0.2: `/project/docs/superpowers/specs/2026-05-28-company-nanoteofficial-v0.2-design.md`
-Plan v0.2: `/project/docs/superpowers/plans/2026-05-28-company-nanoteofficial-v0.2.md`
+No tests. No TypeScript. Single-file server (`server.js`) + static frontend (`public/`). `detectAndParse()` auto-detects XLSX format and dispatches to `parsePersonalStatement()` or `parsePortfolioData()`. `fetchFromUrl()` handles Google Sheets/Drive URLs.
