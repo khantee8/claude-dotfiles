@@ -61,6 +61,9 @@ Each project in `/project/src/` has its own `docker-compose.yml` co-located insi
 - **cloudflare**: Cloudflare Workers, Pages, and bindings
 - **vercel**: Vercel deployment, env vars, and AI SDK
 - **skill-creator**: Create and improve Claude Code skills
+- **ui-ux-pro-max**: UI/UX design intelligence (styles, palettes, font pairings, chart types)
+
+All plugins are `@claude-plugins-official` except **ui-ux-pro-max**, which comes from a third-party marketplace (`nextlevelbuilder/ui-ux-pro-max-skill`). That marketplace is registered under `extraKnownMarketplaces` in `.claude/settings.json` and must exist before the plugin can be (re)installed.
 
 ---
 
@@ -140,7 +143,9 @@ These are the source files for the portfolio site's avatar and CV download links
 
 ## Projects in /project/src/
 
-All projects deploy to Vercel Hobby (auto-deploy from `main`). Each has its own git repo under `khantee8/`. Each `*.nanoteofficial.me` project has a subdomain CNAME in Namecheap pointing to Vercel.
+> **`src/` is gitignored in this dotfiles repo.** Each project is an independent `khantee8/` git repo nested under `src/`. Commits and pushes from `/project` only ever touch the dotfiles config — to commit project code, `cd` into the project directory first and work in its own repo.
+
+All projects deploy to Vercel Hobby (auto-deploy from `main`). Each `*.nanoteofficial.me` project has a subdomain CNAME in Namecheap pointing to Vercel.
 
 ### nanoteofficial.me — Portfolio Site
 
