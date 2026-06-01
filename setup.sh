@@ -34,6 +34,7 @@ done
 if command -v claude &>/dev/null; then
   echo ""
   echo "Re-installing Claude Code plugins..."
+  claude plugin marketplace add nextlevelbuilder/ui-ux-pro-max-skill 2>/dev/null && echo "  ✓ marketplace: ui-ux-pro-max-skill" || echo "  ✗ marketplace: ui-ux-pro-max-skill (already added/skipped)"
   claude plugin install frontend-design@claude-code-plugins      --yes 2>/dev/null && echo "  ✓ frontend-design"       || echo "  ✗ frontend-design (skipped)"
   claude plugin install code-review@claude-code-plugins          --yes 2>/dev/null && echo "  ✓ code-review"           || echo "  ✗ code-review (skipped)"
   claude plugin install commit-commands@claude-code-plugins       --yes 2>/dev/null && echo "  ✓ commit-commands"       || echo "  ✗ commit-commands (skipped)"
@@ -41,6 +42,7 @@ if command -v claude &>/dev/null; then
   claude plugin install context7@claude-plugins-official          --yes 2>/dev/null && echo "  ✓ context7"              || echo "  ✗ context7 (skipped)"
   claude plugin install webapp-testing@anthropic-agent-skills    --yes 2>/dev/null && echo "  ✓ webapp-testing"        || echo "  ✗ webapp-testing (skipped)"
   claude plugin install superpowers@superpowers-marketplace       --yes 2>/dev/null && echo "  ✓ superpowers"           || echo "  ✗ superpowers (skipped)"
+  claude plugin install ui-ux-pro-max@ui-ux-pro-max-skill         --yes 2>/dev/null && echo "  ✓ ui-ux-pro-max"         || echo "  ✗ ui-ux-pro-max (skipped)"
 else
   echo ""
   echo "  ⚠  'claude' CLI not found — install Claude Code first, then re-run this script."
