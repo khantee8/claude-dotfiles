@@ -51,11 +51,12 @@ Each project in `/project/src/` has its own `docker-compose.yml` co-located insi
 - **context7**: Live, version-specific library docs lookup (reduces API hallucinations)
 - **webapp-testing**: Playwright-based browser testing for UI verification and debugging
 - **telegram**: Telegram bot integration
-- **superpowers**: Development workflow framework — brainstorm → plan → implement with TDD
-  - /superpowers:brainstorm — Refine ideas before coding
-  - /superpowers:write-plan — Create implementation plans
-  - /superpowers:execute-plan — Execute plans in batches via subagents
-  - Auto-activating skills: test-driven-development, systematic-debugging, verification-before-completion
+- **superpowers** (v5.1.0): Development workflow framework — brainstorm → plan → implement with TDD. **Skills-only, no slash commands** (the old `/superpowers:write-plan`-style commands were removed). Invoke via the **Skill tool** by skill name; they also auto-trigger via the plugin's session-start hook (`using-superpowers` bootstrap).
+  - `brainstorming` — refine ideas before coding (NOT `/superpowers:brainstorm`)
+  - `writing-plans` — create implementation plans (NOT `write-plan`)
+  - `executing-plans` / `subagent-driven-development` — execute plans task-by-task (NOT `execute-plan`)
+  - Auto-activating skills: `test-driven-development`, `systematic-debugging`, `verification-before-completion`
+  - **Enablement note:** superpowers must be enabled in the settings scope that applies to your cwd. Sessions rooted in a nested `src/<project>` repo (no own `.claude/`) resolve plugins from `~/.claude/settings.json` only — so it must be enabled there, not just in `/project/.claude/settings.json`.
 - **claude-code-setup**: Claude Code configuration helpers
 - **auth0**: Auth0 integration patterns
 - **cloudflare**: Cloudflare Workers, Pages, and bindings
