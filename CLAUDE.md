@@ -190,18 +190,18 @@ cd /project/src/company.nanoteofficial.me
 npm run dev        # http://localhost:3000
 npm run build
 npm run lint
-npm test           # vitest — 35 tests across 8 files
+npm test           # vitest
 npx tsc --noEmit
 ```
 
-Pixel-art isometric office with 5 AI department agents (CEO, Marketing, R&D, Operations, Finance). v0.2 (current) = real Claude agents producing daily artifacts via Vercel Cron, Upstash Redis for state, two-way Telegram bot, and deploy alerts.
+Pixel-art two-floor isometric office with 6 AI department agents (CEO, Finance, CyberX, Marketing & Social Media, AI R&D, Operations). v1.4.2 (current) = real, **web-researched + cited** Claude agents running from detailed role specs, a raised executive **2nd-floor mezzanine** (CEO + Finance) over a ground floor (the rest), a public glassmorphism `/dashboard` + per-agent `/dashboard/[dept]`, a private `/admin` console, a bilingual **TH/EN** UI, a bilingual `/doc` operator guide, a published-only `/api/kb` knowledge API, mixed-cadence Vercel Cron, Upstash Redis state, and a two-way Telegram bot.
 
 **Architecture layers**:
-- **Isometric engine** (`src/lib/iso/`) — vanilla HTML5 Canvas renderer, no game library
-- **Agent system** (`src/lib/agents/`) — Agent class with state machine, persona definitions, department modules (ceo/marketing/rnd/operations/finance), runner orchestrator
-- **Integrations** (`src/lib/`) — `claude.ts` (Anthropic SDK), `redis.ts` (Upstash), `telegram.ts` (bot API), `sources/` (CoinGecko, Vercel API, GitHub API)
-- **API routes** — `/api/cron/run` (CRON_SECRET-protected, 5 daily jobs staggered UTC 11–15 in `vercel.json`), `/api/agents`, `/api/feed`, `/api/telegram` (webhook), `/api/webhooks/vercel` (deploy alerts)
-- **Components** — OfficeCanvas, DepartmentSidebar, TerminalFeed, TopBar, OfficeApp, ArtifactPanel, Markdown (safe renderer, no `dangerouslySetInnerHTML`)
+- **Isometric engine** (`src/lib/iso/`) — vanilla HTML5 Canvas renderer, no game library; `room.ts` `drawMezzanine()` renders the raised 2nd floor
+- **Agent system** (`src/lib/agents/`) — Agent class with state machine, `roles.ts` (loads Thai role specs from `.agents/*.md`) → `personas.ts`, department modules, `runner.ts` orchestrator; artifacts carry `'api'`/`'web'` provenance and `'web'` is never uncited
+- **Integrations** (`src/lib/`) — `claude.ts` (Anthropic SDK, `webSearch`), `redis.ts` (Upstash, addressable KB graph), `telegram.ts` (bot API), `dashboard.ts` (read aggregator), `sources/` (CISA KEV, Hacker News, Dev.to, GitHub, Vercel), `i18n/` (TH/EN seam), `doc.ts` (operator guide loader)
+- **API routes** — `/api/cron/run?dept=` (CRON_SECRET, mixed per-agent cadence), `/api/dashboard`, `/api/admin/*` (session-cookie-gated run + KB CRUD), `/api/kb` (published-only), `/api/agents`, `/api/feed`, `/api/telegram` (webhook), `/api/webhooks/vercel` (deploy alerts)
+- **Components** — NavBar (responsive, LangToggle), OfficeCanvas, DepartmentSidebar, TerminalFeed, TopBar, OfficeApp, ExecDashboard, AgentDetail, KbManager, `charts/` (hand-rolled SVG), `doc/` (guide renderer), Markdown (safe renderer, no `dangerouslySetInnerHTML`)
 
 See `src/company.nanoteofficial.me/CLAUDE.md` for full architecture and env var list.
 
