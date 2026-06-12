@@ -23,7 +23,17 @@
       "Glob(*)",
       "LS(*)",
       "Task(*)",
-      "mcp__*"
+      "mcp__plugin_context7_context7__*",
+      "mcp__plugin_github_github__*",
+      "mcp__plugin_playwright_playwright__*",
+      "mcp__plugin_vercel_vercel__*",
+      "mcp__plugin_telegram_telegram__*",
+      "mcp__plugin_cloudflare_cloudflare-api__*",
+      "mcp__plugin_cloudflare_cloudflare-bindings__*",
+      "mcp__plugin_cloudflare_cloudflare-builds__*",
+      "mcp__plugin_cloudflare_cloudflare-docs__*",
+      "mcp__plugin_cloudflare_cloudflare-observability__*",
+      "mcp__ide__*"
     ]
   },
   "enabledPlugins": {
