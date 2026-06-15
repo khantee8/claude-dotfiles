@@ -195,7 +195,7 @@ npm test           # vitest
 npx tsc --noEmit
 ```
 
-Pixel-art two-floor isometric office with 6 AI department agents (CEO, Finance, CyberX, Marketing & Social Media, AI R&D, Operations). v1.4.2 (current) = real, **web-researched + cited** Claude agents running from detailed role specs, a raised executive **2nd-floor mezzanine** (CEO + Finance) over a ground floor (the rest), a public glassmorphism `/dashboard` + per-agent `/dashboard/[dept]`, a private `/admin` console, a bilingual **TH/EN** UI, a bilingual `/doc` operator guide, a published-only `/api/kb` knowledge API, mixed-cadence Vercel Cron, Upstash Redis state, and a two-way Telegram bot.
+Pixel-art two-floor isometric office with 6 AI department agents (CEO, Finance, CyberX, Marketing & Social Media, AI R&D, Operations). v1.7 (current) = real, **web-researched + cited** Claude agents running from detailed role specs, a raised executive **2nd-floor mezzanine** (CEO + Finance) over a ground floor (the rest), a public glassmorphism `/dashboard` + per-agent `/dashboard/[dept]`, a private `/admin` console, a bilingual **TH/EN** UI, a bilingual `/doc` operator guide, a published-only `/api/kb` knowledge API, mixed-cadence Vercel Cron, Upstash Redis state, and a two-way Telegram bot.
 
 **Architecture layers**:
 - **Isometric engine** (`src/lib/iso/`) — vanilla HTML5 Canvas renderer, no game library; `room.ts` `drawMezzanine()` renders the raised 2nd floor
@@ -205,6 +205,23 @@ Pixel-art two-floor isometric office with 6 AI department agents (CEO, Finance, 
 - **Components** — NavBar (responsive, LangToggle), OfficeCanvas, DepartmentSidebar, TerminalFeed, TopBar, OfficeApp, ExecDashboard, AgentDetail, KbManager, `charts/` (hand-rolled SVG), `doc/` (guide renderer), Markdown (safe renderer, no `dangerouslySetInnerHTML`)
 
 See `src/company.nanoteofficial.me/CLAUDE.md` for full architecture and env var list.
+
+---
+
+### thai-funds-mcp — Thai SEC Fund Data MCP Server
+
+**Stack**: Next.js 16 (App Router), React 19, TypeScript, `mcp-handler`, Vitest
+**Live**: https://thaifundmcp.nanoteofficial.me/api/mcp
+
+```bash
+cd /project/src/thai-funds-mcp
+npm run dev        # next dev — MCP at http://localhost:3000/api/mcp
+npm run build
+npm test           # vitest
+npx tsc --noEmit
+```
+
+Standalone **remote MCP server** (own `khantee8/thai-funds-mcp` repo + Vercel project) that is the data backend for **company**'s Finance agent (v1.6 — Finance calls it via the Anthropic MCP connector). The entire server is one file (`app/api/mcp/route.ts`): `createMcpHandler` registers **7 tools**, wrapped in `withMcpAuth` bearer auth (`MCP_AUTH_TOKEN`, **fails closed** if unset). Tools: `list_thai_funds`, `thai_fund_nav`, `thai_fund_fees`, `thai_fund_risk`, `thai_fund_asset_allocation` (Thai SEC v2 Open Data API), `market_index` (**Yahoo Finance** — stooq is datacenter-blocked), `fx_rate` (Frankfurter). Every tool returns a `sourceUrl` (+ `asOf` where applicable) so consumers can cite the data. Adapters live in `src/sources/` (pure `shape*`/`select*` units, fixture-tested; `fetch*` swallows errors → `null`/`[]`). **Env**: `SEC_API_KEY` (SEC Open Data subscription key) + `MCP_AUTH_TOKEN` (= company's `THAI_FUNDS_MCP_TOKEN`). SEC API quirks (cursor pagination, no readable fund names/returns, `proj_id` keying) are documented in the repo's `sec-endpoints.md`. See `src/thai-funds-mcp/CLAUDE.md`.
 
 ---
 
