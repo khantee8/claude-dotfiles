@@ -161,7 +161,24 @@ npm run lint
 npx tsc --noEmit
 ```
 
-Multi-subdomain portfolio site — `proxy.ts` rewrites `<sub>.nanoteofficial.me` → `/<sub>` (finance, cyber, kb, art are preview shells). v1.3 adds a "Company" section between About and Experience with a live iframe of `company.nanoteofficial.me`. See `src/nanoteofficial.me/CLAUDE.md` for full architecture (subdomain routing, i18n, theming, component conventions).
+Multi-subdomain portfolio site — `proxy.ts` rewrites `<sub>.nanoteofficial.me` → `/<sub>` (finance, cyber, kb, art are preview shells). v1.3 adds a "Company" section between About and Experience with a live iframe of `company.nanoteofficial.me`. **v0.3.0 (2026-07-22): the `/plan` workspace was extracted out** to its own repo/project (see `plan.nanoteofficial.me` below) — this repo is now static-only (no auth/db/Anthropic) and keeps a permanent `next.config.ts` redirect `/plan/:path*` → `https://plan.nanoteofficial.me/:path*`. See `src/nanoteofficial.me/CLAUDE.md` for full architecture (subdomain routing, i18n, theming, component conventions).
+
+---
+
+### plan.nanoteofficial.me — Project-Management Workspace + AI Slides
+
+**Stack**: Next.js 16 (App Router), React 19, TypeScript, Tailwind v4, Auth.js v5 (Resend magic-link), Neon Postgres + Drizzle, Anthropic SDK, pptxgenjs
+**Live**: https://plan.nanoteofficial.me
+
+```bash
+cd /project/src/plan.nanoteofficial.me
+npm run dev        # http://localhost:3000
+npm run build
+npm run lint
+npx tsc --noEmit   # no test runner — tsc + lint + build are the gate (build must pass with DATABASE_URL unset)
+```
+
+Extracted from the portfolio on 2026-07-22 (own `khantee8/plan.nanoteofficial.me` repo + Vercel project + fresh Neon DB; data migrated over). Private, invite-only (`ALLOWED_EMAILS` + invite rows). Root-path URLs (`/`, `/signin`, `/admin`, `/[projectId]`, `/[projectId]/slides`); auth gate is `src/app/(app)/layout.tsx` — **no middleware/proxy**. i18n split: `lib/lang.ts` (cookie) vs `lib/i18n.ts` (dictionary). Includes the AI Slide add-on (`lib/slides/*` + `components/slides/*`). Migrations: `DATABASE_URL="…" npx drizzle-kit push`. See `src/plan.nanoteofficial.me/CLAUDE.md`.
 
 ---
 
