@@ -242,6 +242,26 @@ Standalone **remote MCP server** (own `khantee8/thai-funds-mcp` repo + Vercel pr
 
 ---
 
+### exam.nanoteofficial.me — IT Certification Exam Practice
+
+**Stack**: Next.js 16 (App Router), React 19, TypeScript, Tailwind v4, Auth.js v5 (Resend magic-link), Neon Postgres + Drizzle, Vitest
+**Repo**: `khantee8/exam.nanoteofficial.me` (**private** — holds licensed question content)
+
+```bash
+cd /project/src/exam.nanoteofficial.me
+npm run dev              # http://localhost:3000
+npm run build            # must pass with DATABASE_URL unset
+npm run lint && npx tsc --noEmit && npm test
+npm run validate:content # invariant checks over bank.md, no DB needed
+DATABASE_URL="…" npm run seed
+```
+
+Private, invite-only exam trainer. v1 subject: **PECB ISO/IEC 27001 Lead Implementer** (285 questions, 38 scenarios), architecture multi-subject from day one. Two modes: **practice** (warm "calm study" UI, instant feedback + written explanation per answer) and **exam simulation** (dark "exam hall" UI, timer, flag-for-review, resume, auto-submit). Question order and choice order are seed-shuffled with scenario blocks kept contiguous. Access = request → admin approval → magic link; the gate is `src/app/(app)/layout.tsx`, **no middleware**.
+
+Content pipeline: gitignored `sources/*.pdf` → per-range `content/<subject>/extract/*.md` → master `content/<subject>/bank.md` (versioned, the source of truth) → `questions-only.md` (no answer key) → seeded into Postgres. `src/lib/content/parse.ts` parses a strict grammar and throws on malformation rather than silently dropping a question. See `src/exam.nanoteofficial.me/CLAUDE.md` for the grammar, the eager-vs-lazy DB client rule (the Auth.js adapter needs an eager instance), and the known marked-answer-vs-community-vote quirk in the source bank.
+
+---
+
 ### personal-investment-project — Portfolio Analyzer
 
 **Stack**: Node.js + Express, vanilla HTML/CSS/JS frontend, no build step
