@@ -1,8 +1,5 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-settings.json",
-  "theme": "dark-ansi",
-  "alwaysThinkingEnabled": true,
-  "enableRemoteControl": true,
   "env": {
     "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1",
     "CLAUDE_CODE_MAX_OUTPUT_TOKENS": "64000",
@@ -51,7 +48,8 @@
     "cloudflare@claude-plugins-official": true,
     "vercel@claude-plugins-official": true,
     "skill-creator@claude-plugins-official": true,
-    "ui-ux-pro-max@ui-ux-pro-max-skill": true
+    "ui-ux-pro-max@ui-ux-pro-max-skill": true,
+    "figma@claude-plugins-official": true
   },
   "extraKnownMarketplaces": {
     "ui-ux-pro-max-skill": {
@@ -60,5 +58,8 @@
         "repo": "nextlevelbuilder/ui-ux-pro-max-skill"
       }
     }
-  }
+  },
+  "alwaysThinkingEnabled": true,
+  "theme": "dark-ansi",
+  "enableRemoteControl": true
 }
