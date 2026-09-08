@@ -161,7 +161,7 @@ npm run lint
 npx tsc --noEmit
 ```
 
-Multi-subdomain portfolio site — `proxy.ts` rewrites `<sub>.nanoteofficial.me` → `/<sub>` (finance, cyber, kb, art are preview shells). v1.3 adds a "Company" section between About and Experience with a live iframe of `company.nanoteofficial.me`. **v0.3.0 (2026-07-22): the `/plan` workspace was extracted out** to its own repo/project (see `plan.nanoteofficial.me` below) — this repo is now static-only (no auth/db/Anthropic) and keeps a permanent `next.config.ts` redirect `/plan/:path*` → `https://plan.nanoteofficial.me/:path*`. See `src/nanoteofficial.me/CLAUDE.md` for full architecture (subdomain routing, i18n, theming, component conventions).
+Multi-subdomain portfolio site — `proxy.ts` rewrites `<sub>.nanoteofficial.me` → `/<sub>` (finance, cyber, kb, art are preview shells). v1.3 adds a "Company" section between About and Experience with a live iframe of `company.nanoteofficial.me`. **v0.3.0 (2026-07-22): the `/plan` workspace was extracted out** to its own repo/project (see `plan.nanoteofficial.me` below) — this repo is now static-only (no auth/db/Anthropic) and keeps a permanent `next.config.ts` redirect `/plan/:path*` → `https://plan.nanoteofficial.me/:path*`. Current **v0.7.2 (2026-09-08)**: the Tools section is a connection map of the shipped systems with in-place drill-in (v0.6–v0.7); `cyber` is not yet a node on it. See `src/nanoteofficial.me/CLAUDE.md` for full architecture (subdomain routing, i18n, theming, component conventions).
 
 ---
 
@@ -212,7 +212,7 @@ npm test           # vitest
 npx tsc --noEmit
 ```
 
-Pixel-art two-floor isometric office with 6 AI department agents (CEOX, FinX, CyberX, M&SX, AIX, OperX — chibi-shonen manga sprites since v1.12). v1.12 (current) = real, **web-researched + cited** Claude agents running as **async Anthropic Message Batches** (50% token pricing, no serverless-timeout ceiling: submit + in-request self-poll + a 10-min GitHub Actions `/api/cron/poll` backstop), a v1.11 **frontend/backend role seam** (FinX/CyberX/M&SX/AIX auto-publish to the KB through a quality gate + instant Library sync; CEOX/OperX are internal-only with strategy boards and a self-heal watchdog sweep), a raised executive **2nd-floor mezzanine** (CEOX + FinX), a public glassmorphism `/dashboard` + per-agent `/dashboard/[dept]`, a private `/admin` orchestrator console, a bilingual **TH/EN** UI, a bilingual `/doc` operator guide, a published-only `/api/kb` + `/api/kb/graph` knowledge API, mixed-cadence Vercel Cron, Upstash Redis state, and a two-way Telegram bot.
+Pixel-art two-floor isometric office with 6 AI department agents (CEOX, FinX, CyberX, M&SX, AIX, OperX — chibi-shonen manga sprites since v1.12). **1.14.1** is current (v1.14.0 added a `/plan` slide module by mistake; v1.14.1 reverted it — the feature lives in `plan.nanoteofficial.me`). v1.12 = real, **web-researched + cited** Claude agents running as **async Anthropic Message Batches** (50% token pricing, no serverless-timeout ceiling: submit + in-request self-poll + a 10-min GitHub Actions `/api/cron/poll` backstop), a v1.11 **frontend/backend role seam** (FinX/CyberX/M&SX/AIX auto-publish to the KB through a quality gate + instant Library sync; CEOX/OperX are internal-only with strategy boards and a self-heal watchdog sweep), a raised executive **2nd-floor mezzanine** (CEOX + FinX), a public glassmorphism `/dashboard` + per-agent `/dashboard/[dept]`, a private `/admin` orchestrator console, a bilingual **TH/EN** UI, a bilingual `/doc` operator guide, a published-only `/api/kb` + `/api/kb/graph` knowledge API, mixed-cadence Vercel Cron, Upstash Redis state, and a two-way Telegram bot.
 
 **Architecture layers**:
 - **Isometric engine** (`src/lib/iso/`) — vanilla HTML5 Canvas renderer, no game library; `room.ts` `drawMezzanine()` renders the raised 2nd floor
@@ -283,6 +283,37 @@ npm run intel:snapshot   # refresh the committed Threat Intel fallback from the 
 ```
 
 Cybersecurity platform, module by module. **Threat Intel** (`/intel`, public, also the landing-page HUD and map band) aggregates free key-less feeds — CISA KEV joined with FIRST EPSS, ransomware.live victims, abuse.ch Feodo C2, SANS ISC infocon/top ports, THN + BleepingComputer RSS — through one 15-minute `unstable_cache` with a committed `fallback.json` (stale-labelled) so no feed outage blanks the page; the world map is inline SVG from `world-atlas` (zero browser requests) and `/api/intel` exposes the snapshot. **GRC / ISO 27001:2022** (`/grc/iso27001`, invite-only) is a persisted ISMS workspace: all 93 Annex A controls (titles public, summaries in our own words, 27002 attribute tags) with status/owner/justification/evidence links, gap assessment by theme, a 5×5 risk register with treatment + residual scoring and keyword-suggested control links, and a Statement of Applicability whose CSV export returns 409 until every exclusion is justified. `src/lib/grc/frameworks.ts` is the seam for NIST CSF 2.0 / CRAF. **AI Red Teaming** and **Training / Consulting** are "in design" pages. Auth mirrors `exam` (gate = `src/app/(app)/layout.tsx`, no middleware; `getDb()` rule). Neon was provisioned via `vercel integration add neon` (own project); the domain is bound explicitly and overrides the portfolio's `*.nanoteofficial.me` wildcard. Local DB testing uses a Postgres container behind a Neon-protocol proxy (`NEON_LOCAL_PROXY`) — recipe in `src/cyber.nanoteofficial.me/CLAUDE.md`. Design spec: `docs/superpowers/specs/2026-09-08-cyber-nanoteofficial-v1-design.md` (assumptions in §15).
+
+---
+
+### kb.nanoteofficial.me — NaNote Library
+
+**Stack**: Next.js 16 (App Router), React 19, TypeScript, Neon Postgres (`@neondatabase/serverless` 0.10.x — no `sql.query()`), Vercel Cron
+**Repo**: `khantee8/kb.nanoteofficial.me` (public) · **Live**: https://kb.nanoteofficial.me (v0.2.0, 2026-06-17)
+
+```bash
+cd /project/src/kb.nanoteofficial.me
+npm run dev
+npm run build
+npm run db:migrate     # applies the 7-table schema + tsvector trigger
+```
+
+Login-gated reader and executive dashboard over the **company** knowledge base: a daily cron pulls published briefs from `company.nanoteofficial.me/api/kb` into Postgres and the UI reads Postgres only (zero LLM calls, free tier). v0.2.0 added a reader TOC with scroll-spy, saved filter views, drag-drop collection assignment and a sync-history timeline. One change to `src/lib/sync.ts` (drop the `?limit=200` so every published entry syncs) has sat **uncommitted since June 2026** — decide whether to ship it. See `src/kb.nanoteofficial.me/CLAUDE.md`.
+
+---
+
+### tools.nanoteofficial.me — Architecture Map
+
+**Stack**: Next.js 16 (App Router), React 19, TypeScript, Vitest
+**Repo**: `khantee8/tools.nanoteofficial.me` (**private** — `src/data/systems.private.ts` holds env-var names, routes, schedules and gate locations) · **Live**: https://tools.nanoteofficial.me (v0.1.0, untagged)
+
+```bash
+cd /project/src/tools.nanoteofficial.me
+npm run dev
+npm run build && npm test
+```
+
+The authoritative model of how the `khantee8` systems connect: an overview map at `/` and a per-system architecture page at `/[slug]`, plus generated FigJam boards. The portfolio's public Tools map duplicates a public-safe subset, so **a change to any system's connections must be made in both repos**. Its README still says "not deployed" — the site has been on Vercel since the portfolio's v0.5 — and neither repo lists `cyber` as a system yet.
 
 ---
 
