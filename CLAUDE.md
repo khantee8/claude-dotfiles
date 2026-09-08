@@ -269,6 +269,23 @@ Content pipeline: gitignored `sources/*.pdf` → per-range `content/<subject>/ex
 
 ---
 
+### cyber.nanoteofficial.me — NaNote Cyber (Threat Intel + GRC)
+
+**Stack**: Next.js 16 (App Router), React 19, TypeScript, Tailwind v4, Auth.js v5 (Resend magic-link), Neon Postgres + Drizzle, Vitest, d3-geo + world-atlas
+**Repo**: `khantee8/cyber.nanoteofficial.me` (public) · **Live**: https://cyber.nanoteofficial.me (v1.0.0, 2026-09-08)
+
+```bash
+cd /project/src/cyber.nanoteofficial.me
+npm run dev              # http://localhost:3000
+npm run build            # must pass with DATABASE_URL unset
+npm run lint && npx tsc --noEmit && npm test
+npm run intel:snapshot   # refresh the committed Threat Intel fallback from the live feeds
+```
+
+Cybersecurity platform, module by module. **Threat Intel** (`/intel`, public, also the landing-page HUD and map band) aggregates free key-less feeds — CISA KEV joined with FIRST EPSS, ransomware.live victims, abuse.ch Feodo C2, SANS ISC infocon/top ports, THN + BleepingComputer RSS — through one 15-minute `unstable_cache` with a committed `fallback.json` (stale-labelled) so no feed outage blanks the page; the world map is inline SVG from `world-atlas` (zero browser requests) and `/api/intel` exposes the snapshot. **GRC / ISO 27001:2022** (`/grc/iso27001`, invite-only) is a persisted ISMS workspace: all 93 Annex A controls (titles public, summaries in our own words, 27002 attribute tags) with status/owner/justification/evidence links, gap assessment by theme, a 5×5 risk register with treatment + residual scoring and keyword-suggested control links, and a Statement of Applicability whose CSV export returns 409 until every exclusion is justified. `src/lib/grc/frameworks.ts` is the seam for NIST CSF 2.0 / CRAF. **AI Red Teaming** and **Training / Consulting** are "in design" pages. Auth mirrors `exam` (gate = `src/app/(app)/layout.tsx`, no middleware; `getDb()` rule). Neon was provisioned via `vercel integration add neon` (own project); the domain is bound explicitly and overrides the portfolio's `*.nanoteofficial.me` wildcard. Local DB testing uses a Postgres container behind a Neon-protocol proxy (`NEON_LOCAL_PROXY`) — recipe in `src/cyber.nanoteofficial.me/CLAUDE.md`. Design spec: `docs/superpowers/specs/2026-09-08-cyber-nanoteofficial-v1-design.md` (assumptions in §15).
+
+---
+
 ### personal-investment-project — Portfolio Analyzer
 
 **Stack**: Node.js + Express, vanilla HTML/CSS/JS frontend, no build step
