@@ -161,7 +161,7 @@ npm run lint
 npx tsc --noEmit
 ```
 
-Multi-subdomain portfolio site — `proxy.ts` rewrites `<sub>.nanoteofficial.me` → `/<sub>` (finance, cyber, kb, art are preview shells). v1.3 adds a "Company" section between About and Experience with a live iframe of `company.nanoteofficial.me`. **v0.3.0 (2026-07-22): the `/plan` workspace was extracted out** to its own repo/project (see `plan.nanoteofficial.me` below) — this repo is now static-only (no auth/db/Anthropic) and keeps a permanent `next.config.ts` redirect `/plan/:path*` → `https://plan.nanoteofficial.me/:path*`. Current **v0.7.2 (2026-09-08)**: the Tools section is a connection map of the shipped systems with in-place drill-in (v0.6–v0.7); `cyber` is not yet a node on it. See `src/nanoteofficial.me/CLAUDE.md` for full architecture (subdomain routing, i18n, theming, component conventions).
+Multi-subdomain portfolio site — `proxy.ts` rewrites `<sub>.nanoteofficial.me` → `/<sub>` (finance, cyber, kb, art are preview shells). v1.3 adds a "Company" section between About and Experience with a live iframe of `company.nanoteofficial.me`. **v0.3.0 (2026-07-22): the `/plan` workspace was extracted out** to its own repo/project (see `plan.nanoteofficial.me` below) — this repo is now static-only (no auth/db/Anthropic) and keeps a permanent `next.config.ts` redirect `/plan/:path*` → `https://plan.nanoteofficial.me/:path*`. Current **v0.8.0 (2026-09-08)**: the Tools section is a connection map of the shipped systems with in-place drill-in (v0.6–v0.7). v0.8.0 added `cyber` as a full node with its own drill-in graph, introduced a fourth `planned` maturity tier so `art` can appear dashed and non-clickable without an invented architecture, and flipped the `cyber` roadmap card from `In design` to `Live` pointing at the real deployment. The `/cyber` preview shell — a hand-written fake CVE feed — was deliberately left in place. See `src/nanoteofficial.me/CLAUDE.md` for full architecture (subdomain routing, i18n, theming, component conventions).
 
 ---
 
@@ -305,7 +305,7 @@ Login-gated reader and executive dashboard over the **company** knowledge base: 
 ### tools.nanoteofficial.me — Architecture Map
 
 **Stack**: Next.js 16 (App Router), React 19, TypeScript, Vitest
-**Repo**: `khantee8/tools.nanoteofficial.me` (**private** — `src/data/systems.private.ts` holds env-var names, routes, schedules and gate locations) · **Live**: https://tools.nanoteofficial.me (v0.1.0, untagged)
+**Repo**: `khantee8/tools.nanoteofficial.me` (**private** — `src/data/systems.private.ts` holds env-var names, routes, schedules and gate locations) · **Live**: https://tools.nanoteofficial.me (v0.2.0, untagged)
 
 ```bash
 cd /project/src/tools.nanoteofficial.me
@@ -313,7 +313,7 @@ npm run dev
 npm run build && npm test
 ```
 
-The authoritative model of how the `khantee8` systems connect: an overview map at `/` and a per-system architecture page at `/[slug]`, plus generated FigJam boards. The portfolio's public Tools map duplicates a public-safe subset, so **a change to any system's connections must be made in both repos**. Its README still says "not deployed" — the site has been on Vercel since the portfolio's v0.5 — and neither repo lists `cyber` as a system yet.
+The authoritative model of how the `khantee8` systems connect: an overview map at `/` and a per-system architecture page at `/[slug]`, plus generated FigJam boards. The portfolio's public Tools map duplicates a public-safe subset, so **a change to any system's connections must be made in both repos**. As of **v0.2.0 (2026-09-08)** both repos model eight systems: seven built plus `art`, the single `planned` entry, which carries an empty graph on purpose (`model.test.ts` fails the build if a planned system grows nodes, or a node-less system is marked anything else). The README's stale "not deployed" claim was corrected in the same release.
 
 ---
 
