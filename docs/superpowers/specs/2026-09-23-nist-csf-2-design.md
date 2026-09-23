@@ -86,9 +86,15 @@ Generated, committed, static — no DB and no network at build or test time.
   subcategories, implementation examples; public domain) and NIST OLIR
   informative reference **"ISO/IEC-27001:2022-to-Cybersecurity-Framework-v2.0"**
   (catalogue referenceId 154, Final v1.0.0, 2026-07-09).
+- **Download points (verified 2026-09-23):** the CPRT JSON export
+  (`…/nudp/framework/version/csf_2_0_0/export/json?element=all`) for text and
+  examples, and the CSF 2.0 Reference Tool workbook (`…/json/csf/download?olirids=all`),
+  whose "Informative References" column carries the ISO/IEC 27001:2022 Annex A
+  references per subcategory (97 of 106 mapped). Parsing the workbook adds one
+  devDependency, `exceljs`, used only by the import script.
 - **Import script:** `npm run csf:import` (`scripts/import-csf.ts`) downloads
-  both, keeps only active elements (the export also carries 202 withdrawn CSF 1.1
-  items), and writes `src/lib/grc/nist-csf-2/catalogue.data.json`. Same pattern as
+  both, keeps only active elements (the export also carries withdrawn CSF 1.1
+  items, marked by a relationship to a `WR-` element), and writes `src/lib/grc/nist-csf-2/catalogue.data.json`. Same pattern as
   `intel:snapshot`: the only code that touches the network, refuses to write on
   any shape mismatch.
 - **Thai:** `src/lib/grc/nist-csf-2/catalogue.th.json` — our translation of every
