@@ -304,6 +304,22 @@ Login-gated reader and executive dashboard over the **company** knowledge base: 
 
 ---
 
+### date.nanoteofficial.me — Meal Invitation
+
+**Stack**: Next.js 16 (App Router), React 19, TypeScript, Tailwind v4, Auth.js v5 (Resend magic-link), Neon Postgres + Drizzle, `motion`, Vitest, Playwright
+**Repo**: `khantee8/date.nanoteofficial.me` (**private**, personal) · **Live**: https://date.nanoteofficial.me (v0.1.0, 2026-10-06)
+
+```bash
+cd /project/src/date.nanoteofficial.me
+npm run dev        # http://localhost:3100
+npm run lint && npx tsc --noEmit && npm test && npm run build
+npm run e2e        # needs the local DB containers date-pg + date-neon-proxy
+```
+
+Single-purpose Thai invitation page for one person: `/` asks "ไปกินข้าวกันมั้ย?" with an original mascot and a No button that cannot be caught (it gives up after 7 taps on touch devices; a quiet "maybe" link appears after 3), `/plan` collects date, time, food mood (หมาล่า first), restaurant, car, alcohol, pace and an optional email, `/done/[id]` is a ticket with a QR code, save-as-image, `.ics` (two alerts) and a Google Calendar link. `/admin` (magic link, `ALLOWED_EMAILS` only) lists submissions and a per-visitor timeline; the owner is emailed on submit and on "maybe". **The copy never names the sender or says "date"** (a test enforces it); all Thai copy is in `src/lib/copy.ts`. Not on the tools map or the portfolio (personal). See `src/date.nanoteofficial.me/CLAUDE.md`.
+
+---
+
 ### tools.nanoteofficial.me — Architecture Map
 
 **Stack**: Next.js 16 (App Router), React 19, TypeScript, Vitest
