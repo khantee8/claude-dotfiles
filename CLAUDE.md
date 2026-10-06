@@ -307,7 +307,7 @@ Login-gated reader and executive dashboard over the **company** knowledge base: 
 ### date.nanoteofficial.me — Meal Invitation
 
 **Stack**: Next.js 16 (App Router), React 19, TypeScript, Tailwind v4, Auth.js v5 (Resend magic-link), Neon Postgres + Drizzle, `motion`, Vitest, Playwright
-**Repo**: `khantee8/date.nanoteofficial.me` (**private**, personal) · **Live**: https://date.nanoteofficial.me (v1.0.0, 2026-10-06)
+**Repo**: `khantee8/date.nanoteofficial.me` (**private**, personal) · **Live**: https://date.nanoteofficial.me (v1.0.1, 2026-10-06)
 
 ```bash
 cd /project/src/date.nanoteofficial.me
@@ -316,7 +316,7 @@ npm run lint && npx tsc --noEmit && npm test && npm run build
 npm run e2e        # needs the local DB containers date-pg + date-neon-proxy
 ```
 
-Single-purpose Thai invitation page for one person: `/` asks "ไปกินข้าวกันมั้ย?" with an original mascot and a No button that cannot be caught (it gives up after 7 taps on touch devices; a quiet "maybe" link appears after 3), `/plan` collects date, time, food mood (หมาล่า first), restaurant, car, alcohol, pace and an optional email, `/done/[id]` is a ticket with a QR code, save-as-image and an `.ics` with two alerts (the Google Calendar button was removed in v1.0). `/admin` (magic link, `ALLOWED_EMAILS` only) lists submissions and a per-visitor timeline, with edit, delete and bulk delete (v1.0; server actions that each re-check the session); the owner is emailed on submit and on "maybe". **The copy never names the sender or says "date"** (a test enforces it); all Thai copy is in `src/lib/copy.ts`. v1.0 also hardened the public write paths (all-visitor caps on events and outgoing mail, sign-in link throttle, cross-origin beacon drop, control-character stripping) and moved to Next.js 16.3.8 for a critical `next/og` advisory. Not on the tools map or the portfolio (personal). See `src/date.nanoteofficial.me/CLAUDE.md`.
+Single-purpose Thai invitation page for one person: `/` asks "ไปกินข้าวกันมั้ย?" with an original mascot and a No button that cannot be caught (it gives up after 7 taps on touch devices; a quiet "maybe" link appears after 3), `/plan` collects date, time, food mood (หมาล่า first), restaurant, car, alcohol, pace and an optional email, `/done/[id]` is a ticket with a QR code, save-as-image and an `.ics` with two alerts (the Google Calendar button was removed in v1.0). `/admin` (magic link, `ALLOWED_EMAILS` only) lists submissions and a per-visitor timeline, with edit, delete and bulk delete (v1.0; server actions that each re-check the session); the owner is emailed on submit and on "maybe". **The copy never names the sender or says "date"** (a test enforces it); all Thai copy is in `src/lib/copy.ts`. v1.0 also hardened the public write paths (all-visitor caps on events and outgoing mail, sign-in link throttle, cross-origin beacon drop, control-character stripping) and moved to Next.js 16.3.8 for a critical `next/og` advisory. v1.0.1 adds a **maintenance switch** in `/admin` (the `(site)` route group renders a maintenance page; tickets and admin stay up; new `setting` table) and a **TH/EN toggle** (Thai default, `lang` cookie, `th`/`en` objects with identical keys in `copy.ts`). Not on the tools map or the portfolio (personal). See `src/date.nanoteofficial.me/CLAUDE.md`.
 
 ---
 
