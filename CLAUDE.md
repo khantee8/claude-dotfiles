@@ -138,7 +138,7 @@ chmod +x setup.sh
 - `Saksit-CV-2026-EN.pdf` / `Saksit-CV-2026-TH.pdf` — current CVs (English & Thai)
 - `Profile1.JPG` / `Profile2.JPG` — profile photos
 
-These are the source files for the portfolio site's avatar and CV download links.
+These are the source files for the portfolio site's avatar. The CVs are private: since portfolio v0.9.2 they are not on the site or in its repo — never copy them into `public/`.
 
 ---
 
